@@ -1,6 +1,27 @@
 // تحميل المنتجات من localStorage
 function loadProducts() {
     const products = JSON.parse(localStorage.getItem('products')) || [];
+    
+    // إذا كانت المنتجات فارغة، نقوم بتخزين منتجات تجريبية
+    if (products.length === 0) {
+        const defaultProducts = [
+            {
+                name: "منتج 1",
+                description: "وصف المنتج 1",
+                price: "100",
+                image: "https://via.placeholder.com/150"
+            },
+            {
+                name: "منتج 2",
+                description: "وصف المنتج 2",
+                price: "200",
+                image: "https://via.placeholder.com/150"
+            }
+        ];
+        localStorage.setItem('products', JSON.stringify(defaultProducts));
+        products.push(...defaultProducts);
+    }
+
     displayProducts(products);
 }
 
@@ -20,36 +41,6 @@ function displayProducts(products) {
         `;
     });
 }
-
-// إضافة منتج جديد إلى localStorage
-document.getElementById('addProductForm')?.addEventListener('submit', function (e) {
-    e.preventDefault();
-
-    const name = document.getElementById('productName').value;
-    const description = document.getElementById('productDescription').value;
-    const price = document.getElementById('productPrice').value;
-    const imageInput = document.getElementById('productImage');
-
-    if (imageInput.files.length === 0) {
-        alert('يرجى اختيار صورة للمنتج.');
-        return;
-    }
-
-    const reader = new FileReader();
-    reader.onload = function (event) {
-        const imageBase64 = event.target.result;
-
-        const products = JSON.parse(localStorage.getItem('products')) || [];
-        products.push({ name, description, price, image: imageBase64 });
-        localStorage.setItem('products', JSON.stringify(products));
-
-        alert('تم إضافة المنتج بنجاح!');
-        e.target.reset();
-        loadProducts(); // إعادة تحميل المنتجات
-    };
-
-    reader.readAsDataURL(imageInput.files[0]);
-});
 
 // الانتقال إلى صفحة الشراء
 function buyProduct(productName) {
