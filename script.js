@@ -1,28 +1,15 @@
-// تحميل المنتجات من localStorage
+// تحميل المنتجات من URL
 function loadProducts() {
-    const products = JSON.parse(localStorage.getItem('products')) || [];
-    
-    // إذا كانت المنتجات فارغة، نقوم بتخزين منتجات تجريبية
-    if (products.length === 0) {
-        const defaultProducts = [
-            {
-                name: "منتج 1",
-                description: "وصف المنتج 1",
-                price: "100",
-                image: "https://via.placeholder.com/150"
-            },
-            {
-                name: "منتج 2",
-                description: "وصف المنتج 2",
-                price: "200",
-                image: "https://via.placeholder.com/150"
-            }
-        ];
-        localStorage.setItem('products', JSON.stringify(defaultProducts));
-        products.push(...defaultProducts);
-    }
+    const productsUrl = 'https://raw.githubusercontent.com/RenewedTechnology/RenewedTechnology/main/products.json';
 
-    displayProducts(products);
+    fetch(productsUrl)
+        .then(response => response.json())
+        .then(products => {
+            displayProducts(products);
+        })
+        .catch(error => {
+            console.error("فشل تحميل المنتجات:", error);
+        });
 }
 
 // عرض المنتجات في الصفحة
